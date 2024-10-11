@@ -1,0 +1,25 @@
+{
+  "name": "@caido-community/create-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "create-plugin": "./dist/index.mjs"
+  },
+  "scripts": {
+    "build": "unbuild"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@inquirer/prompts": "7.0.0",
+    "typescript": "5.6.3",
+    "unbuild": "2.0.0"
+  }
+}
