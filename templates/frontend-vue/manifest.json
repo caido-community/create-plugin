@@ -1,0 +1,30 @@
+{
+  "id": "frontend-vue",
+  "name": "Frontend Vue",
+  "version": "0.0.1",
+  "description": "Plugin template with frontend using VueJS",
+  "author": {
+    "name": "Caido Labs Inc.",
+    "email": "dev@caido.io",
+    "url": "https://github.com/caido-community/create-plugin/templates/frontend-vue"
+  },
+  "plugins": [
+    {
+      "kind": "frontend",
+      "id": "frontend",
+      "name": "Frontend",
+      "entrypoint": "frontend/script.js",
+      "style": "frontend/style.css",
+      "backend": {
+        "id": "backend"
+      }
+    },
+    {
+      "kind": "backend",
+      "id": "backend",
+      "name": "Backend",
+      "runtime": "javascript",
+      "entrypoint": "backend/script.js"
+    }
+  ]
+}
