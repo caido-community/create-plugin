@@ -1,21 +1,7 @@
 import { prompt } from './prompt';
+import { scaffold } from './scaffold';
 
-const main = async () => {
+(async () => {
     const config = await prompt();
-
-    if (config.frontend) {
-        switch (config.frontend.framework) {
-            case 'vue':
-                // Copy the frontend-vue template
-                break;
-            case 'none':
-                // Copy the frontend-vanilla template
-                break;
-        }
-    } else {
-        // Copy the no-frontend template
-    }
-}
-
-// Execute the plugin creation function
-main();
+    await scaffold(config);
+})();
