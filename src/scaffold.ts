@@ -7,10 +7,15 @@ export const scaffold = async (config: ScaffoldConfig) => {
     const templatePath = getTemplatePath(config);
     const destinationPath = getDestinationPath(config);
 
-    console.log(`Creating template in ${destinationPath}`);
+    console.log(`[*] Creating template in ${destinationPath}`);
     await fsPromises.cp(templatePath, destinationPath, { recursive: true });
 
-    console.log(`Template created in ${destinationPath}`);
+    console.log(`[*] Template created in ${destinationPath}`);
+    console.log(`[*] Run the following commands to get started:`)
+    console.log(`[*] - cd ${destinationPath}`)
+    console.log(`[*] - pnpm install`)
+    console.log(`[*] - pnpm build`)
+    console.log(`[*] This will generate a "dist/plugin_package.zip" file ready to be installed in Caido`)
 }
 
 const getTemplatePath = (config: ScaffoldConfig) => {
