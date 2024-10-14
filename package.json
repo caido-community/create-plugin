@@ -1,7 +1,7 @@
 {
   "name": "@caido-community/create-plugin",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Initializer for Caido plugins",
   "bin": {
     "create-plugin": "./dist/index.mjs"
   },
@@ -9,7 +9,8 @@
     "build": "unbuild"
   },
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "engines": {
     "node": "^18.0.0 || >=20.0.0"

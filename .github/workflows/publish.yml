@@ -1,0 +1,47 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - 'main'
+
+env:
+  NODE_VERSION: 20
+  PNPM_VERSION: 9
+
+jobs:
+  publish-js:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: true
+
+    - name: Publish
+      shell: bash
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: |
+        # Read the current version from package.json
+        CURRENT_VERSION=$(jq -r '.version' ./package.json)
+
+        # Check if the version contains "-beta"
+        if [[ "$CURRENT_VERSION" == *"-beta"* ]]; then
+          echo "Publishing $CURRENT_VERSION as beta tag"
+          pnpm publish --access public --tag beta
+        else
+          echo "Publishing $CURRENT_VERSION as latest tag"
+          pnpm publish --access public
+        fi
