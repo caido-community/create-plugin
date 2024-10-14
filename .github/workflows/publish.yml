@@ -29,19 +29,19 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: true
 
-    - name: Publish
-      shell: bash
-      env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      run: |
-        # Read the current version from package.json
-        CURRENT_VERSION=$(jq -r '.version' ./package.json)
+      - name: Publish
+        shell: bash
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Read the current version from package.json
+          CURRENT_VERSION=$(jq -r '.version' ./package.json)
 
-        # Check if the version contains "-beta"
-        if [[ "$CURRENT_VERSION" == *"-beta"* ]]; then
-          echo "Publishing $CURRENT_VERSION as beta tag"
-          pnpm publish --access public --tag beta
-        else
-          echo "Publishing $CURRENT_VERSION as latest tag"
-          pnpm publish --access public
-        fi
+          # Check if the version contains "-beta"
+          if [[ "$CURRENT_VERSION" == *"-beta"* ]]; then
+            echo "Publishing $CURRENT_VERSION as beta tag"
+            pnpm publish --access public --tag beta
+          else
+            echo "Publishing $CURRENT_VERSION as latest tag"
+            pnpm publish --access public
+          fi
