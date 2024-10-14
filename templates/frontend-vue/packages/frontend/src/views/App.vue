@@ -1,68 +1,35 @@
 <script setup lang="ts">
-import { useAnalysisService } from "@/services/analysis";
-import { useRoleService } from "@/services/roles";
-import { useSettingsService } from "@/services/settings";
-import { useTemplateService } from "@/services/templates";
-import { useUserService } from "@/services/users";
-import MenuBar from "primevue/menubar";
-import { computed, ref } from "vue";
-import { onMounted } from "vue";
-import Dashboard from "./Dashboard.vue";
-import UsersRoles from "./UsersRoles.vue";
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
 
-const page = ref<"Dashboard" | "User & Roles" | "Settings">("Dashboard");
-const items = [
-  {
-    label: "Dashboard",
-    command: () => {
-      page.value = "Dashboard";
-    },
-  },
-  {
-    label: "Users & Roles",
-    command: () => {
-      page.value = "User & Roles";
-    },
-  },
-];
+import { useSDK } from "@/plugins/sdk";
 
-const component = computed(() => {
-  switch (page.value) {
-    case "Dashboard":
-      return Dashboard;
-    case "User & Roles":
-      return UsersRoles;
-  }
-});
+import manifest from "../../../../manifest.json" with { type: "json" };
+import { ref } from "vue";
 
-const roleService = useRoleService();
-const userService = useUserService();
-const templateService = useTemplateService();
-const settingsService = useSettingsService();
-const analysisService = useAnalysisService();
+// Set the ID of the root element
+// We use the manifest ID to ensure that the ID is unique per-plugin
+// This is necessary to prevent styling conflicts between plugins
+// The value here should be the same as the prefixWrap plugin in postcss.config.js
+const rootId = `plugin--${manifest.id}`;
 
-onMounted(() => {
-  roleService.initialize();
-  userService.initialize();
-  templateService.initialize();
-  settingsService.initialize();
-  analysisService.initialize();
-});
+// Retrieve the SDK instance to interact with the backend
+const sdk = useSDK();
+
+const myVar = ref("Hello World");
+
+// Call the backend to generate a random string
+const onGenerateClick = async () => {
+  const result = await sdk.backend.generateRandomString(10);
+  myVar.value = result;
+};
 </script>
 
 <template>
-  <div id="plugin--authmatrix">
-    <div class="h-full flex flex-col gap-1">
-      <MenuBar :model="items" breakpoint="320px" />
-      <div class="flex-1 min-h-0">
-        <component :is="component" />
-      </div>
+  <div :id="rootId" class="h-full flex justify-center items-center">
+    <div class="flex flex-col gap-1">
+      <Button label="Generate random string" @click="onGenerateClick" />
+      <InputText :model-value="myVar" readonly />
     </div>
   </div>
 </template>
-
-<style scoped>
-#plugin--authmatrix {
-  height: 100%;
-}
-</style>

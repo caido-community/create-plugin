@@ -7,9 +7,6 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build"
   },
-  "dependencies": {
-    "shared": "workspace:*"
-  },
   "devDependencies": {
     "@caido/sdk-backend": "0.41.0"
   }
