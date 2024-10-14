@@ -8,7 +8,7 @@ export const scaffold = async (config: ScaffoldConfig) => {
     const destinationPath = getDestinationPath(config);
 
     console.log(`[*] Creating template in ${destinationPath}`);
-    await fsPromises.cp(templatePath, destinationPath, { recursive: true });
+    await fsPromises.cp(templatePath, destinationPath, { recursive: true, errorOnExist: true });
 
     console.log(`[*] Template created in ${destinationPath}`);
     console.log(`[*] Run the following commands to get started:`)

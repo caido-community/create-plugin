@@ -24,7 +24,7 @@ export const prompt = async (): Promise<ScaffoldConfig> => {
     frontend = await select({
       message: 'Choose a frontend framework:',
       choices: [
-        { name: 'VueJS', value: { framework: 'vue' }, description: 'Build UIs with VueJS and Caido components (recommended)' },
+        { name: 'VueJS (recommended)', value: { framework: 'vue' }, description: 'Build UIs with VueJS and Caido components' },
         { name: 'No Framework', value: { framework: 'none' } },
       ],
     });
