@@ -1,7 +1,7 @@
 {
   "name": "frontend-vue",
   "version": "0.0.1",
-  "description": "Plugin template with frontend using VueJS",
+  "description": "Plugin package template with frontend using VueJS",
   "author": "Caido Labs Inc. <dev@caido.io>",
   "license": "CC0-1.0",
   "type": "module",

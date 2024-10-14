@@ -15,7 +15,7 @@ export const prompt = async (): Promise<ScaffoldConfig> => {
   });
 
   const hasFrontend = await confirm({
-    message: "Will your plugin package need to customize the user interface?",
+    message: "Will your plugin package customize the Caido UI?",
   });
 
   let frontend: ScaffoldConfig['frontend'] | undefined = undefined;
@@ -24,7 +24,7 @@ export const prompt = async (): Promise<ScaffoldConfig> => {
     frontend = await select({
       message: 'Choose a frontend framework:',
       choices: [
-        { name: 'VueJS', value: { framework: 'vue' }, description: 'Build user interfaces with VueJS and Caido components' },
+        { name: 'VueJS', value: { framework: 'vue' }, description: 'Build UIs with VueJS and Caido components (recommended)' },
         { name: 'No Framework', value: { framework: 'none' } },
       ],
     });

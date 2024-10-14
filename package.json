@@ -1,9 +1,15 @@
 {
   "name": "@caido-community/create-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Initializer for Caido plugins",
+  "author": "Caido Labs Inc. <dev@caido.io>",
+  "homepage": "https://github.com/caido-community/create-plugin",
   "bin": {
     "create-plugin": "./dist/index.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caido-community/create-plugin.git"
   },
   "scripts": {
     "build": "unbuild"
@@ -16,7 +22,6 @@
     "node": "^18.0.0 || >=20.0.0"
   },
   "keywords": [],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "@inquirer/prompts": "7.0.0",
