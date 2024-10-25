@@ -1,6 +1,6 @@
 {
   "name": "@caido-community/create-plugin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Initializer for Caido plugins",
   "author": "Caido Labs Inc. <dev@caido.io>",
   "homepage": "https://github.com/caido-community/create-plugin",
