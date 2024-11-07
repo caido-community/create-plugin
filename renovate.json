@@ -4,7 +4,6 @@
     {
       "packagePatterns": ["^@caido/", "^@caido-community/"],
       "groupName": "caido-packages",
-      "schedule": ["daily"],
       "automerge": true
     }
   ]
