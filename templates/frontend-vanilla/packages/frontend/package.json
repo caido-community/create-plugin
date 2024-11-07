@@ -8,8 +8,8 @@
   },
   "devDependencies": {
     "typescript": "5.6.3",
-    "@caido/sdk-backend": "0.42.0",
-    "@caido/sdk-frontend": "0.42.0",
+    "@caido/sdk-backend": "0.43.1",
+    "@caido/sdk-frontend": "0.43.1",
     "@caido/tailwindcss": "0.0.1",
     "@codemirror/view": "6.28.1",
     "backend": "workspace:*",
