@@ -1,18 +1,14 @@
 {
   "name": "no-frontend",
-  "version": "0.0.1",
-  "description": "Plugin package template with no frontend",
-  "author": "Caido Labs Inc. <dev@caido.io>",
-  "license": "CC0-1.0",
-  "type": "module",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "typecheck": "pnpm -r typecheck",
-    "build": "node scripts/clean.js && pnpm -r build && node scripts/pack.js"
+    "build": "caido-dev build",
+    "watch": "caido-dev watch"
   },
   "devDependencies": {
-    "@caido/plugin-manifest": "0.2.0",
-    "jszip": "3.10.1",
-    "typescript": "5.5.4",
-    "vite": "5.2.7"
+    "@caido-community/dev": "0.0.5",
+    "typescript": "5.5.4"
   }
 }
