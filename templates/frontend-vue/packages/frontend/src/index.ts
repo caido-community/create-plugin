@@ -6,8 +6,6 @@ import App from "./views/App.vue";
 
 import "./styles/index.css";
 
-import manifest from "../../../manifest.json" with { type: "json" };
-
 import { SDKPlugin } from "./plugins/sdk";
 import type { FrontendSDK } from "./types";
 
@@ -34,10 +32,9 @@ export const init = (sdk: FrontendSDK) => {
   });
 
   // Set the ID of the root element
-  // We use the manifest ID to ensure that the ID is unique per-plugin
+  // Replace this with the value of the prefixWrap plugin in caido.config.ts 
   // This is necessary to prevent styling conflicts between plugins
-  // The value here should be the same as the prefixWrap plugin in postcss.config.js
-  root.id = `plugin--${manifest.id}`;
+  root.id = `plugin--frontend-vue`;
 
   // Mount the app to the root element
   app.mount(root);
