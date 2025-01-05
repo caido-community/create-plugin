@@ -1,8 +1,12 @@
 {
   "name": "@caido-community/create-plugin",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Initializer for Caido plugins",
-  "author": "Caido Labs Inc. <dev@caido.io>",
+  "author": {
+    "name": "Caido Labs Inc.",
+    "email": "dev@caido.io",
+    "url": "https://caido.io"
+  },
   "homepage": "https://github.com/caido-community/create-plugin",
   "bin": {
     "create-plugin": "./dist/index.mjs"
