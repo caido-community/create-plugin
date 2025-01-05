@@ -2,8 +2,6 @@ import "./styles/index.css";
 
 import type { FrontendSDK } from "./types";
 
-import manifest from "../../../manifest.json" with { type: "json" };
-
 // This is the entry point for the frontend plugin
 export const init = (sdk: FrontendSDK) => {
 
@@ -15,10 +13,9 @@ export const init = (sdk: FrontendSDK) => {
   });
 
   // Set the ID of the root element
-  // We use the manifest ID to ensure that the ID is unique per-plugin
+  // Replace this with the value of the prefixWrap plugin in caido.config.ts 
   // This is necessary to prevent styling conflicts between plugins
-  // The value here should be the same as the prefixWrap plugin in postcss.config.js
-  root.id = `plugin--${manifest.id}`;
+  root.id = `plugin--frontend-vanilla`;
 
   // Create the parent element
   const parent = document.createElement("div");
