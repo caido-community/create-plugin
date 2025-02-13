@@ -46,8 +46,8 @@ jobs:
           # Check if the version contains "-beta"
           if [[ "$CURRENT_VERSION" == *"-beta"* ]]; then
             echo "Publishing $CURRENT_VERSION as beta tag"
-            pnpm -r create-plugin publish --access public --tag beta
+            pnpm --filter create-plugin -r publish --access public --tag beta
           else
             echo "Publishing $CURRENT_VERSION as latest tag"
-            pnpm -r create-plugin publish --access public
+            pnpm --filter create-plugin -r publish --access public
           fi
