@@ -8,7 +8,7 @@
     "watch": "caido-dev watch"
   },
   "devDependencies": {
-    "@caido-community/dev": "0.0.5",
+    "@caido-community/dev": "0.1.0",
     "typescript": "5.5.4"
   }
 }
