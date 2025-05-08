@@ -1,6 +1,6 @@
-# Vanilla JS Frontend Template
+# No Frontend Template
 
-This template should be used as a starting point for creating a new plugin with a vanilla JS frontend.
+This template should be used as a starting point for creating a new plugin with no frontend.
 
 ## Features
 
