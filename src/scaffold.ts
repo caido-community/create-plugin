@@ -24,12 +24,7 @@ const getTemplatePath = (config: ScaffoldConfig) => {
     const templateDir = path.join(__dirname, "../", 'templates');
 
     if (config.frontend) {
-        switch (config.frontend.framework) {
-            case 'vue':
-                return path.join(templateDir, 'frontend-vue');
-            case 'none':
-                return path.join(templateDir, 'frontend-vanilla');
-        }
+        return path.join(templateDir, 'frontend-vue');
     } else {
         return path.join(templateDir, 'no-frontend');
     }
