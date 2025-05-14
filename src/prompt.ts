@@ -1,4 +1,4 @@
-import { input, confirm, select } from '@inquirer/prompts';
+import { input, confirm } from '@inquirer/prompts';
 import { ScaffoldConfig } from './types';
 
 
@@ -18,20 +18,8 @@ export const prompt = async (): Promise<ScaffoldConfig> => {
     message: "Will your plugin package customize the Caido UI?",
   });
 
-  let frontend: ScaffoldConfig['frontend'] | undefined = undefined;
-
-  if (hasFrontend) {
-    frontend = await select({
-      message: 'Choose a frontend framework:',
-      choices: [
-        { name: 'VueJS (recommended)', value: { framework: 'vue' }, description: 'Build UIs with VueJS and Caido components' },
-        { name: 'No Framework', value: { framework: 'none' } },
-      ],
-    });
-  }
-
   return {
     packageName,
-    frontend
+    frontend: hasFrontend ? { framework: 'vue' } : undefined
   }
 }

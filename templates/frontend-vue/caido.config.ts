@@ -35,7 +35,19 @@ export default defineConfig({
         plugins: [vue()],
         build: {
           rollupOptions: {
-            external: ['@caido/frontend-sdk']
+            external: [
+              '@caido/frontend-sdk', 
+              "@codemirror/state", 
+              "@codemirror/view", 
+              "@codemirror/autocomplete", 
+              "@codemirror/commands", 
+              "@codemirror/lint", 
+              "@codemirror/search", 
+              "@codemirror/language", 
+              "@lezer/common", 
+              "@lezer/highlight", 
+              "@lezer/lr"
+            ]
           }
         },
         resolve: {
