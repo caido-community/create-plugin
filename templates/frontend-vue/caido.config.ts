@@ -37,16 +37,18 @@ export default defineConfig({
           rollupOptions: {
             external: [
               '@caido/frontend-sdk', 
-              "@codemirror/state", 
-              "@codemirror/view", 
               "@codemirror/autocomplete", 
               "@codemirror/commands", 
+              "@codemirror/language", 
               "@codemirror/lint", 
               "@codemirror/search", 
-              "@codemirror/language", 
+              "@codemirror/state", 
+              "@codemirror/view", 
               "@lezer/common", 
               "@lezer/highlight", 
-              "@lezer/lr"
+              "@lezer/lr",
+              "vue",
+
             ]
           }
         },
