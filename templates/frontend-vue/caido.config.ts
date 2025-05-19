@@ -36,6 +36,7 @@ export default defineConfig({
         build: {
           rollupOptions: {
             external: [
+              "vue",
               '@caido/frontend-sdk', 
               "@codemirror/state", 
               "@codemirror/view", 
