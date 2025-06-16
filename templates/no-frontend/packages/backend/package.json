@@ -5,6 +5,7 @@
   "types": "src/index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "lint": "eslint ./src --fix --max-warnings 0",
     "build": "vite build"
   },
   "devDependencies": {
