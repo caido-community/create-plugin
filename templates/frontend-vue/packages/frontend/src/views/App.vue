@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
+import { ref } from "vue";
 
 import { useSDK } from "@/plugins/sdk";
-
-import { ref } from "vue";
 
 // Retrieve the SDK instance to interact with the backend
 const sdk = useSDK();

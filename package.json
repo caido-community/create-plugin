@@ -1,6 +1,6 @@
 {
   "name": "@caido-community/create-plugin",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Initializer for Caido plugins",
   "author": {
     "name": "Caido Labs Inc.",
@@ -16,7 +16,9 @@
     "url": "git+https://github.com/caido-community/create-plugin.git"
   },
   "scripts": {
-    "build": "unbuild"
+    "build": "unbuild",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ./src --fix --max-warnings 0"
   },
   "files": [
     "dist",
@@ -29,6 +31,7 @@
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
+    "@caido/eslint-config": "0.5.0",
     "@inquirer/prompts": "7.0.0",
     "typescript": "5.6.3",
     "unbuild": "2.0.0"
