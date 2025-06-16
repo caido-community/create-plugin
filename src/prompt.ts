@@ -1,13 +1,13 @@
-import { input, confirm } from '@inquirer/prompts';
-import { ScaffoldConfig } from './types';
+import { confirm, input } from "@inquirer/prompts";
 
+import { type ScaffoldConfig } from "./types";
 
-export const prompt = async (): Promise<ScaffoldConfig> => { 
+export const prompt = async (): Promise<ScaffoldConfig> => {
   const packageName = await input({
-    message: 'What is the name of your plugin package?',
+    message: "What is the name of your plugin package?",
     validate: (value) => {
       if (value.length === 0) {
-        return 'Package name is required';
+        return "Package name is required";
       }
 
       return true;
@@ -20,6 +20,6 @@ export const prompt = async (): Promise<ScaffoldConfig> => {
 
   return {
     packageName,
-    frontend: hasFrontend ? { framework: 'vue' } : undefined
-  }
-}
+    frontend: hasFrontend ? { framework: "vue" } : undefined,
+  };
+};
