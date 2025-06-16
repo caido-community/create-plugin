@@ -14,12 +14,9 @@ export const prompt = async (): Promise<ScaffoldConfig> => {
     },
   });
 
-    const hasFrontend = await confirm({
-      message: "Will your plugin package customize the Caido UI?",
-    });
-
-    const x: "ASD";
-
+  const hasFrontend = await confirm({
+    message: "Will your plugin package customize the Caido UI?",
+  });
 
   return {
     packageName,
