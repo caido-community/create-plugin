@@ -14,6 +14,8 @@ export const scaffold = async (config: ScaffoldConfig) => {
     errorOnExist: true,
   });
 
+  await copySharedCursorRules(destinationPath);
+
   console.log(`[*] Template created in ${destinationPath}`);
   console.log(`[*] Run the following commands to get started:`);
   console.log(`[*] - cd ${destinationPath}`);
@@ -42,4 +44,26 @@ const getDestinationPath = (config: ScaffoldConfig) => {
     "-",
   );
   return path.join(process.cwd(), sanitizedPackageName);
+};
+
+const getSharedCursorRulesPath = () => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  return path.join(__dirname, "../", "templates", "shared", "cursor-rules");
+};
+
+const copySharedCursorRules = async (destinationPath: string) => {
+  const sharedRulesSource = getSharedCursorRulesPath();
+  try {
+    await fsPromises.access(sharedRulesSource);
+  } catch {
+    return;
+  }
+
+  const rulesDestination = path.join(destinationPath, ".cursor", "rules");
+  await fsPromises.mkdir(rulesDestination, { recursive: true });
+  await fsPromises.cp(sharedRulesSource, rulesDestination, {
+    recursive: true,
+    errorOnExist: false,
+  });
 };
