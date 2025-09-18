@@ -20,6 +20,8 @@ alwaysApply: false
 
 - Often use PrimeVue `Splitter` and `SplitterPanel` for vertical or horizontal layout.
 - Prefer to use `Card` PrimeVue components a lot, if needed add `h-full` to them via `pt` params.
+- Remember to use `<template #content>` and other named slots (like `#header`, `#footer`) in Card and other PrimeVue components that support them.
+
 
 Example:
 
@@ -31,6 +33,10 @@ Example:
     content: { class: 'h-full flex flex-col' },
   }"
 >
+  <template #content>
+     ...
+  </template #content>
+</Card>
 ```
 
 ### Enviroment
