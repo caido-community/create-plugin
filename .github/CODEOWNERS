@@ -1,7 +1,7 @@
 # Critical
-package.json @caido-community/management
-pnpm-lock.yaml @caido-community/management
-.github/workflows/ @caido-community/management
+package.json @caido-community/mgmt
+pnpm-lock.yaml @caido-community/mgmt
+.github/ @caido-community/mgmt
 
 # Default
 * @caido-community/dev
