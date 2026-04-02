@@ -47,7 +47,7 @@ const getDestinationPath = (config: ScaffoldConfig) => {
   return path.join(process.cwd(), sanitizedPackageName);
 };
 
-const toPluginId = (packageName: string) => {
+export const toPluginId = (packageName: string) => {
   return packageName
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, "-")
@@ -63,7 +63,7 @@ const getTemplateName = (config: ScaffoldConfig) => {
   return config.frontend ? "Frontend Vue" : "No Frontend";
 };
 
-const updateTemplateValues = async (
+export const updateTemplateValues = async (
   destinationPath: string,
   config: ScaffoldConfig,
 ) => {
@@ -81,12 +81,13 @@ const updateTemplateValues = async (
   await fsPromises.writeFile(configPath, configContent);
 
   const packageJsonPath = path.join(destinationPath, "package.json");
-  let packageJsonContent = await fsPromises.readFile(packageJsonPath, "utf-8");
-  packageJsonContent = packageJsonContent.replace(
-    `"name": "${templateId}"`,
-    `"name": "${pluginId}"`,
+  const packageJsonContent = await fsPromises.readFile(packageJsonPath, "utf-8");
+  const packageJson = JSON.parse(packageJsonContent);
+  packageJson.name = pluginId;
+  await fsPromises.writeFile(
+    packageJsonPath,
+    JSON.stringify(packageJson, null, 2) + "\n",
   );
-  await fsPromises.writeFile(packageJsonPath, packageJsonContent);
 };
 
 const getSharedCursorRulesPath = () => {
