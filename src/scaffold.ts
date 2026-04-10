@@ -14,6 +14,7 @@ export const scaffold = async (config: ScaffoldConfig) => {
     errorOnExist: true,
   });
 
+  await updateTemplateValues(destinationPath, config);
   await copySharedCursorRules(destinationPath);
 
   console.log(`[*] Template created in ${destinationPath}`);
@@ -44,6 +45,49 @@ const getDestinationPath = (config: ScaffoldConfig) => {
     "-",
   );
   return path.join(process.cwd(), sanitizedPackageName);
+};
+
+export const toPluginId = (packageName: string) => {
+  return packageName
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+};
+
+const getTemplateId = (config: ScaffoldConfig) => {
+  return config.frontend ? "frontend-vue" : "no-frontend";
+};
+
+const getTemplateName = (config: ScaffoldConfig) => {
+  return config.frontend ? "Frontend Vue" : "No Frontend";
+};
+
+export const updateTemplateValues = async (
+  destinationPath: string,
+  config: ScaffoldConfig,
+) => {
+  const pluginId = toPluginId(config.packageName);
+  const templateId = getTemplateId(config);
+  const templateName = getTemplateName(config);
+
+  const configPath = path.join(destinationPath, "caido.config.ts");
+  let configContent = await fsPromises.readFile(configPath, "utf-8");
+  configContent = configContent.replaceAll(`"${templateId}"`, `"${pluginId}"`);
+  configContent = configContent.replaceAll(
+    `"${templateName}"`,
+    `"${config.packageName}"`,
+  );
+  await fsPromises.writeFile(configPath, configContent);
+
+  const packageJsonPath = path.join(destinationPath, "package.json");
+  const packageJsonContent = await fsPromises.readFile(packageJsonPath, "utf-8");
+  const packageJson = JSON.parse(packageJsonContent);
+  packageJson.name = pluginId;
+  await fsPromises.writeFile(
+    packageJsonPath,
+    JSON.stringify(packageJson, null, 2) + "\n",
+  );
 };
 
 const getSharedCursorRulesPath = () => {
