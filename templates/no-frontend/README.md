@@ -4,5 +4,18 @@ This template should be used as a starting point for creating a new plugin with 
 
 ## Features
 
+- [mise](https://mise.jdx.dev/) to manage the Node.js and pnpm toolchain
 - [pnpm](https://pnpm.io/) as package manager
 - [TypeScript](https://www.typescriptlang.org/)
+
+## Getting Started
+
+The Node.js and pnpm versions are pinned in [`mise.toml`](./mise.toml). Install them once with mise, then build:
+
+```bash
+mise install   # installs the pinned Node.js and pnpm
+pnpm install
+pnpm build
+```
+
+CI uses the same `mise.toml`, so your local and CI toolchains stay in sync.
