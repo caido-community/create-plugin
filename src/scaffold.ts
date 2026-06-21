@@ -15,7 +15,7 @@ export const scaffold = async (config: ScaffoldConfig) => {
   });
 
   await updateTemplateValues(destinationPath, config);
-  await copySharedCursorRules(destinationPath);
+  await copySharedSkills(destinationPath, config);
 
   console.log(`[*] Template created in ${destinationPath}`);
   console.log(`[*] Run the following commands to get started:`);
@@ -81,7 +81,10 @@ export const updateTemplateValues = async (
   await fsPromises.writeFile(configPath, configContent);
 
   const packageJsonPath = path.join(destinationPath, "package.json");
-  const packageJsonContent = await fsPromises.readFile(packageJsonPath, "utf-8");
+  const packageJsonContent = await fsPromises.readFile(
+    packageJsonPath,
+    "utf-8",
+  );
   const packageJson = JSON.parse(packageJsonContent);
   packageJson.name = pluginId;
   await fsPromises.writeFile(
@@ -90,24 +93,39 @@ export const updateTemplateValues = async (
   );
 };
 
-const getSharedCursorRulesPath = () => {
+const getSharedSkillsPath = () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  return path.join(__dirname, "../", "templates", "shared", "cursor-rules");
+  return path.join(__dirname, "../", "templates", "shared", "skills");
 };
 
-const copySharedCursorRules = async (destinationPath: string) => {
-  const sharedRulesSource = getSharedCursorRulesPath();
+const getSharedSkills = (config: ScaffoldConfig) => {
+  const skills = ["caido-plugin-development"];
+  if (config.frontend) {
+    skills.push("caido-vue-ui");
+  }
+  return skills;
+};
+
+export const copySharedSkills = async (
+  destinationPath: string,
+  config: ScaffoldConfig,
+) => {
+  const sharedSkillsSource = getSharedSkillsPath();
   try {
-    await fsPromises.access(sharedRulesSource);
+    await fsPromises.access(sharedSkillsSource);
   } catch {
     return;
   }
 
-  const rulesDestination = path.join(destinationPath, ".cursor", "rules");
-  await fsPromises.mkdir(rulesDestination, { recursive: true });
-  await fsPromises.cp(sharedRulesSource, rulesDestination, {
-    recursive: true,
-    errorOnExist: false,
-  });
+  const skillsDestination = path.join(destinationPath, ".agents", "skills");
+  await fsPromises.mkdir(skillsDestination, { recursive: true });
+
+  for (const skill of getSharedSkills(config)) {
+    await fsPromises.cp(
+      path.join(sharedSkillsSource, skill),
+      path.join(skillsDestination, skill),
+      { recursive: true, errorOnExist: false },
+    );
+  }
 };
