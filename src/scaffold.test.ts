@@ -1,9 +1,10 @@
 import fsPromises from "fs/promises";
-import path from "path";
 import os from "os";
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import path from "path";
 
-import { toPluginId, updateTemplateValues } from "./scaffold";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
+import { copySharedSkills, toPluginId, updateTemplateValues } from "./scaffold";
 
 describe("toPluginId", () => {
   it("converts a simple name to lowercase", () => {
@@ -95,8 +96,7 @@ export default defineConfig({
     );
     await fsPromises.writeFile(
       path.join(tmpDir, "package.json"),
-      JSON.stringify({ name: "no-frontend", version: "0.0.0" }, null, 2) +
-        "\n",
+      JSON.stringify({ name: "no-frontend", version: "0.0.0" }, null, 2) + "\n",
     );
 
     await updateTemplateValues(tmpDir, {
@@ -145,5 +145,45 @@ export default defineConfig({
     expect(packageJson.version).toBe("0.0.0");
     expect(packageJson.private).toBe(true);
     expect(packageJson.scripts.build).toBe("caido-dev build");
+  });
+});
+
+describe("copySharedSkills", () => {
+  let tmpDir: string;
+
+  const skillExists = async (dest: string, skill: string) => {
+    try {
+      await fsPromises.access(
+        path.join(dest, ".agents", "skills", skill, "SKILL.md"),
+      );
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  beforeEach(async () => {
+    tmpDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), "skills-test-"));
+  });
+
+  afterEach(async () => {
+    await fsPromises.rm(tmpDir, { recursive: true });
+  });
+
+  it("copies the development skill for no-frontend plugins, but not the Vue UI skill", async () => {
+    await copySharedSkills(tmpDir, { packageName: "background-worker" });
+
+    expect(await skillExists(tmpDir, "caido-plugin-development")).toBe(true);
+    expect(await skillExists(tmpDir, "caido-vue-ui")).toBe(false);
+  });
+
+  it("copies both the development and Vue UI skills for frontend plugins", async () => {
+    await copySharedSkills(tmpDir, {
+      packageName: "My Cool Scanner",
+      frontend: { framework: "vue" },
+    });
+
+    expect(await skillExists(tmpDir, "caido-plugin-development")).toBe(true);
+    expect(await skillExists(tmpDir, "caido-vue-ui")).toBe(true);
   });
 });
