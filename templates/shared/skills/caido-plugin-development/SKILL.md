@@ -42,6 +42,16 @@ Plugins are described by a `caido.config.ts` file that declares each sub-plugin 
 - Frontend plugins create pages, UI components, and handle user interactions.
 - Backend plugins register API endpoints (and can emit events) that the frontend consumes.
 
+## Toolchain (mise)
+
+This plugin pins its Node.js and pnpm versions with [mise](https://mise.jdx.dev/) in `mise.toml` at the repo root. **Use mise** so you build and run with the exact toolchain CI uses — don't rely on a globally-installed Node/pnpm:
+
+- Install the pinned tools once with `mise install`.
+- Run package scripts through the mise-managed toolchain. Either activate mise in your shell (so `pnpm ...` resolves to the pinned version) or prefix commands with `mise exec --`, e.g. `mise exec -- pnpm install`, `mise exec -- pnpm build`.
+- `mise.toml` is the single source of truth for tool versions — CI reads it too (via `jdx/mise-action`). If a version needs to change, edit `mise.toml`; don't hardcode versions elsewhere.
+
+Package scripts (run with pnpm under the mise toolchain): `build`, `watch`, `typecheck`, `lint`, `knip`.
+
 ## Plugin API Contract (the `shared` package)
 
 The contract lives in `shared` and is consumed by both sides. The current SDK builds it from `@caido/sdk-shared`'s `DefinePluginPackageSpec`.
