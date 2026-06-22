@@ -65,6 +65,13 @@ export default defineConfig({
       JSON.stringify({ name: "frontend-vue", version: "0.0.0" }, null, 2) +
         "\n",
     );
+    await fsPromises.mkdir(path.join(tmpDir, "packages", "shared", "src"), {
+      recursive: true,
+    });
+    await fsPromises.writeFile(
+      path.join(tmpDir, "packages", "shared", "src", "index.ts"),
+      `export type Spec = DefinePluginPackageSpec<{\n  manifestId: "frontend-vue";\n}>;\n`,
+    );
 
     await updateTemplateValues(tmpDir, {
       packageName: "My Cool Scanner",
@@ -84,6 +91,13 @@ export default defineConfig({
       await fsPromises.readFile(path.join(tmpDir, "package.json"), "utf-8"),
     );
     expect(packageJson.name).toBe("my-cool-scanner");
+
+    const specContent = await fsPromises.readFile(
+      path.join(tmpDir, "packages", "shared", "src", "index.ts"),
+      "utf-8",
+    );
+    expect(specContent).toContain('manifestId: "my-cool-scanner"');
+    expect(specContent).not.toContain('manifestId: "frontend-vue"');
   });
 
   it("updates caido.config.ts and package.json for no-frontend template", async () => {
@@ -97,6 +111,13 @@ export default defineConfig({
     await fsPromises.writeFile(
       path.join(tmpDir, "package.json"),
       JSON.stringify({ name: "no-frontend", version: "0.0.0" }, null, 2) + "\n",
+    );
+    await fsPromises.mkdir(path.join(tmpDir, "packages", "backend", "src"), {
+      recursive: true,
+    });
+    await fsPromises.writeFile(
+      path.join(tmpDir, "packages", "backend", "src", "spec.ts"),
+      `export type Spec = DefinePluginPackageSpec<{\n  manifestId: "no-frontend";\n}>;\n`,
     );
 
     await updateTemplateValues(tmpDir, {
@@ -115,6 +136,13 @@ export default defineConfig({
       await fsPromises.readFile(path.join(tmpDir, "package.json"), "utf-8"),
     );
     expect(packageJson.name).toBe("background-worker");
+
+    const specContent = await fsPromises.readFile(
+      path.join(tmpDir, "packages", "backend", "src", "spec.ts"),
+      "utf-8",
+    );
+    expect(specContent).toContain('manifestId: "background-worker"');
+    expect(specContent).not.toContain('manifestId: "no-frontend"');
   });
 
   it("preserves other package.json fields", async () => {
@@ -131,6 +159,13 @@ export default defineConfig({
     await fsPromises.writeFile(
       path.join(tmpDir, "package.json"),
       JSON.stringify(original, null, 2) + "\n",
+    );
+    await fsPromises.mkdir(path.join(tmpDir, "packages", "shared", "src"), {
+      recursive: true,
+    });
+    await fsPromises.writeFile(
+      path.join(tmpDir, "packages", "shared", "src", "index.ts"),
+      `manifestId: "frontend-vue";\n`,
     );
 
     await updateTemplateValues(tmpDir, {
