@@ -13,7 +13,7 @@
     "vue": "3.5.22"
   },
   "devDependencies": {
-    "@caido/sdk-frontend": "0.57.1-beta.4",
+    "@caido/sdk-frontend": "0.57.1",
     "@codemirror/view": "6.38.5",
     "vue-tsc": "3.1.1"
   }
