@@ -1,0 +1,7 @@
+[plugins]
+toolshed = "https://github.com/caido/mise-toolshed"
+
+[tools]
+node = "22"
+pnpm = "10.28.2"
+"toolshed:get-skills" = "latest"
