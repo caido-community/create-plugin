@@ -118,6 +118,18 @@ export type Spec = DefinePluginPackageSpec<{
 
 The backend implements the API and is typed with `SDK<Spec>`.
 
+### Backend Architecture
+
+Use a clean, layered backend architecture:
+
+- Organize code into `api`, `services`, `repositories`, `stores`, and `utils`.
+- Keep filenames short and contextual. Inside `api/`, use `sessions.ts`, not `sessions-api.ts`.
+- Add `index.ts` barrels that re-export production modules.
+- Keep dependencies one-way: API → services → repositories/stores/adapters.
+- APIs validate and map results; services own workflows; repositories own persistence; stores hold process-local state.
+- Prefer dependency injection over module-level globals and getter-based initialization.
+- Prefer discriminated unions with a `kind` field for runtime states.
+
 `backend/src/types.ts`:
 
 ```typescript
