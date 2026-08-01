@@ -13,7 +13,11 @@ const myVar = ref("Hello World");
 // Call the backend to generate a random string
 const onGenerateClick = async () => {
   const result = await sdk.backend.generateRandomString(10);
-  myVar.value = result;
+  if (result.kind === "Ok") {
+    myVar.value = result.value;
+  } else {
+    sdk.window.showToast(result.error, { variant: "error" });
+  }
 };
 </script>
 
