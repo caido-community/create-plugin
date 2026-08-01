@@ -6,10 +6,6 @@ on:
       - 'main'
   pull_request:
 
-env:
-  NODE_VERSION: 24
-  PNPM_VERSION: 10.20.0
-
 jobs:
   validate-templates:
     runs-on: ubuntu-latest
@@ -22,18 +18,10 @@ jobs:
 
     steps:
       - name: Checkout project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
+      - name: Setup mise
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: pnpm install
@@ -58,17 +46,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3.0.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Setup mise
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: pnpm install
@@ -82,17 +63,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4.1.0
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Setup mise
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: pnpm install
@@ -106,17 +80,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Setup mise
+        uses: jdx/mise-action@v4
 
       - name: Install dependencies
         run: pnpm install
