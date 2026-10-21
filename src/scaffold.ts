@@ -71,7 +71,7 @@ export const updateTemplateValues = async (
   destinationPath: string,
   config: ScaffoldConfig,
 ) => {
-  const pluginId = toPluginId(config.packageName);
+  const { pluginId } = config;
   const templateId = getTemplateId(config);
   const templateName = getTemplateName(config);
 
@@ -103,6 +103,25 @@ export const updateTemplateValues = async (
     `manifestId: "${pluginId}"`,
   );
   await fsPromises.writeFile(specPath, specContent);
+
+  if (config.frontend) {
+    const frontendEntryPath = path.join(
+      destinationPath,
+      "packages",
+      "frontend",
+      "src",
+      "index.ts",
+    );
+    let frontendEntryContent = await fsPromises.readFile(
+      frontendEntryPath,
+      "utf-8",
+    );
+    frontendEntryContent = frontendEntryContent.replaceAll(
+      `plugin--${templateId}`,
+      `plugin--${pluginId}`,
+    );
+    await fsPromises.writeFile(frontendEntryPath, frontendEntryContent);
+  }
 };
 
 // The plugin Spec (and its `manifestId`) lives in the `shared` package when the

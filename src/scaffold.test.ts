@@ -73,8 +73,17 @@ export default defineConfig({
       `export type Spec = DefinePluginPackageSpec<{\n  manifestId: "frontend-vue";\n}>;\n`,
     );
 
+    await fsPromises.mkdir(path.join(tmpDir, "packages", "frontend", "src"), {
+      recursive: true,
+    });
+    await fsPromises.writeFile(
+      path.join(tmpDir, "packages", "frontend", "src", "index.ts"),
+      "root.id = `plugin--frontend-vue`;\n",
+    );
+
     await updateTemplateValues(tmpDir, {
       packageName: "My Cool Scanner",
+      pluginId: "cool-scanner",
       frontend: { framework: "vue" },
     });
 
@@ -82,7 +91,7 @@ export default defineConfig({
       path.join(tmpDir, "caido.config.ts"),
       "utf-8",
     );
-    expect(configContent).toContain('"my-cool-scanner"');
+    expect(configContent).toContain('"cool-scanner"');
     expect(configContent).toContain('"My Cool Scanner"');
     expect(configContent).not.toContain('"frontend-vue"');
     expect(configContent).not.toContain('"Frontend Vue"');
@@ -90,14 +99,21 @@ export default defineConfig({
     const packageJson = JSON.parse(
       await fsPromises.readFile(path.join(tmpDir, "package.json"), "utf-8"),
     );
-    expect(packageJson.name).toBe("my-cool-scanner");
+    expect(packageJson.name).toBe("cool-scanner");
 
     const specContent = await fsPromises.readFile(
       path.join(tmpDir, "packages", "shared", "src", "index.ts"),
       "utf-8",
     );
-    expect(specContent).toContain('manifestId: "my-cool-scanner"');
+    expect(specContent).toContain('manifestId: "cool-scanner"');
     expect(specContent).not.toContain('manifestId: "frontend-vue"');
+
+    const frontendEntryContent = await fsPromises.readFile(
+      path.join(tmpDir, "packages", "frontend", "src", "index.ts"),
+      "utf-8",
+    );
+    expect(frontendEntryContent).toContain("plugin--cool-scanner");
+    expect(frontendEntryContent).not.toContain("plugin--frontend-vue");
   });
 
   it("updates caido.config.ts and package.json for no-frontend template", async () => {
@@ -122,6 +138,7 @@ export default defineConfig({
 
     await updateTemplateValues(tmpDir, {
       packageName: "background-worker",
+      pluginId: "background-worker",
     });
 
     const configContent = await fsPromises.readFile(
@@ -167,9 +184,17 @@ export default defineConfig({
       path.join(tmpDir, "packages", "shared", "src", "index.ts"),
       `manifestId: "frontend-vue";\n`,
     );
+    await fsPromises.mkdir(path.join(tmpDir, "packages", "frontend", "src"), {
+      recursive: true,
+    });
+    await fsPromises.writeFile(
+      path.join(tmpDir, "packages", "frontend", "src", "index.ts"),
+      "root.id = `plugin--frontend-vue`;\n",
+    );
 
     await updateTemplateValues(tmpDir, {
       packageName: "test-plugin",
+      pluginId: "test-plugin",
       frontend: { framework: "vue" },
     });
 
@@ -206,7 +231,10 @@ describe("copySharedSkills", () => {
   });
 
   it("copies the development skill for no-frontend plugins, but not the Vue UI skill", async () => {
-    await copySharedSkills(tmpDir, { packageName: "background-worker" });
+    await copySharedSkills(tmpDir, {
+      packageName: "background-worker",
+      pluginId: "background-worker",
+    });
 
     expect(await skillExists(tmpDir, "caido-plugin-development")).toBe(true);
     expect(await skillExists(tmpDir, "caido-vue-ui")).toBe(false);
@@ -215,6 +243,7 @@ describe("copySharedSkills", () => {
   it("copies both the development and Vue UI skills for frontend plugins", async () => {
     await copySharedSkills(tmpDir, {
       packageName: "My Cool Scanner",
+      pluginId: "my-cool-scanner",
       frontend: { framework: "vue" },
     });
 
