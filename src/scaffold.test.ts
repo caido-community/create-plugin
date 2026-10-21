@@ -52,33 +52,10 @@ describe("updateTemplateValues", () => {
   });
 
   it("updates caido.config.ts and package.json for frontend-vue template", async () => {
-    await fsPromises.writeFile(
-      path.join(tmpDir, "caido.config.ts"),
-      `const id = "frontend-vue";
-export default defineConfig({
-  id,
-  name: "Frontend Vue",
-});\n`,
-    );
-    await fsPromises.writeFile(
-      path.join(tmpDir, "package.json"),
-      JSON.stringify({ name: "frontend-vue", version: "0.0.0" }, null, 2) +
-        "\n",
-    );
-    await fsPromises.mkdir(path.join(tmpDir, "packages", "shared", "src"), {
-      recursive: true,
-    });
-    await fsPromises.writeFile(
-      path.join(tmpDir, "packages", "shared", "src", "index.ts"),
-      `export type Spec = DefinePluginPackageSpec<{\n  manifestId: "frontend-vue";\n}>;\n`,
-    );
-
-    await fsPromises.mkdir(path.join(tmpDir, "packages", "frontend", "src"), {
-      recursive: true,
-    });
-    await fsPromises.writeFile(
-      path.join(tmpDir, "packages", "frontend", "src", "index.ts"),
-      "root.id = `plugin--frontend-vue`;\n",
+    await fsPromises.cp(
+      path.join(import.meta.dirname, "..", "templates", "frontend-vue"),
+      tmpDir,
+      { recursive: true },
     );
 
     await updateTemplateValues(tmpDir, {
@@ -114,6 +91,23 @@ export default defineConfig({
     );
     expect(frontendEntryContent).toContain("plugin--cool-scanner");
     expect(frontendEntryContent).not.toContain("plugin--frontend-vue");
+
+    const readPackageJson = async (relativePath: string) =>
+      JSON.parse(
+        await fsPromises.readFile(path.join(tmpDir, relativePath), "utf-8"),
+      );
+    expect(packageJson.scripts["build:shared"]).toBe(
+      "pnpm --filter @caido-community/cool-scanner build",
+    );
+    expect((await readPackageJson("packages/shared/package.json")).name).toBe(
+      "@caido-community/cool-scanner",
+    );
+    for (const pkg of ["backend", "frontend"]) {
+      expect(
+        (await readPackageJson(`packages/${pkg}/package.json`)).dependencies
+          .shared,
+      ).toBe("workspace:@caido-community/cool-scanner@*");
+    }
   });
 
   it("updates caido.config.ts and package.json for no-frontend template", async () => {
@@ -164,38 +158,30 @@ export default defineConfig({
 
   it("preserves other package.json fields", async () => {
     const original = {
-      name: "frontend-vue",
+      name: "no-frontend",
       version: "0.0.0",
       private: true,
       scripts: { build: "caido-dev build" },
     };
     await fsPromises.writeFile(
       path.join(tmpDir, "caido.config.ts"),
-      `const id = "frontend-vue";\n`,
+      `id: "no-frontend",\n`,
     );
     await fsPromises.writeFile(
       path.join(tmpDir, "package.json"),
       JSON.stringify(original, null, 2) + "\n",
     );
-    await fsPromises.mkdir(path.join(tmpDir, "packages", "shared", "src"), {
+    await fsPromises.mkdir(path.join(tmpDir, "packages", "backend", "src"), {
       recursive: true,
     });
     await fsPromises.writeFile(
-      path.join(tmpDir, "packages", "shared", "src", "index.ts"),
-      `manifestId: "frontend-vue";\n`,
-    );
-    await fsPromises.mkdir(path.join(tmpDir, "packages", "frontend", "src"), {
-      recursive: true,
-    });
-    await fsPromises.writeFile(
-      path.join(tmpDir, "packages", "frontend", "src", "index.ts"),
-      "root.id = `plugin--frontend-vue`;\n",
+      path.join(tmpDir, "packages", "backend", "src", "spec.ts"),
+      `manifestId: "no-frontend";\n`,
     );
 
     await updateTemplateValues(tmpDir, {
       packageName: "test-plugin",
       pluginId: "test-plugin",
-      frontend: { framework: "vue" },
     });
 
     const packageJson = JSON.parse(

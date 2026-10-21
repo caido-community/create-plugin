@@ -101,23 +101,31 @@ export const updateTemplateValues = async (
   await fsPromises.writeFile(specPath, specContent);
 
   if (config.frontend) {
-    const frontendEntryPath = path.join(
-      destinationPath,
-      "packages",
-      "frontend",
-      "src",
-      "index.ts",
-    );
-    let frontendEntryContent = await fsPromises.readFile(
-      frontendEntryPath,
-      "utf-8",
-    );
-    frontendEntryContent = frontendEntryContent.replaceAll(
+    await replaceInFile(
+      path.join(destinationPath, "packages", "frontend", "src", "index.ts"),
       `plugin--${templateId}`,
       `plugin--${pluginId}`,
     );
-    await fsPromises.writeFile(frontendEntryPath, frontendEntryContent);
+
+    const sharedPackageJsonPaths = [
+      "package.json",
+      "packages/shared/package.json",
+      "packages/backend/package.json",
+      "packages/frontend/package.json",
+    ];
+    for (const sharedPackageJsonPath of sharedPackageJsonPaths) {
+      await replaceInFile(
+        path.join(destinationPath, sharedPackageJsonPath),
+        `@caido-community/${templateId}`,
+        `@caido-community/${pluginId}`,
+      );
+    }
   }
+};
+
+const replaceInFile = async (filePath: string, from: string, to: string) => {
+  const content = await fsPromises.readFile(filePath, "utf-8");
+  await fsPromises.writeFile(filePath, content.replaceAll(from, to));
 };
 
 // The plugin Spec (and its `manifestId`) lives in the `shared` package when the

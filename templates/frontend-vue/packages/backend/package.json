@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "shared": "workspace:*"
+    "shared": "workspace:@caido-community/frontend-vue@*"
   },
   "devDependencies": {
     "@caido/sdk-backend": "0.57.0"

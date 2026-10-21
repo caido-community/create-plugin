@@ -6,7 +6,7 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint ./packages/**/src --fix",
     "knip": "knip",
-    "build:shared": "pnpm --filter shared build",
+    "build:shared": "pnpm --filter @caido-community/frontend-vue build",
     "build": "pnpm build:shared && caido-dev build",
     "watch": "pnpm build:shared && caido-dev watch"
   },

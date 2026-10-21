@@ -1,5 +1,5 @@
 {
-  "name": "shared",
+  "name": "@caido-community/frontend-vue",
   "version": "0.0.0",
   "private": true,
   "type": "module",
