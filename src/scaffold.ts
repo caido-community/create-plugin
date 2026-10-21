@@ -44,11 +44,7 @@ const getTemplatePath = (config: ScaffoldConfig) => {
 };
 
 const getDestinationPath = (config: ScaffoldConfig) => {
-  const sanitizedPackageName = config.packageName.replace(
-    /[^a-zA-Z0-9_-]/g,
-    "-",
-  );
-  return path.join(process.cwd(), sanitizedPackageName);
+  return path.join(process.cwd(), config.pluginId);
 };
 
 export const toPluginId = (packageName: string) => {
