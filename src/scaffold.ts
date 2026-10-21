@@ -18,8 +18,12 @@ export const scaffold = async (config: ScaffoldConfig) => {
   await copySharedSkills(destinationPath, config);
 
   console.log(`[*] Template created in ${destinationPath}`);
+  console.log(
+    `[*] We recommend mise to manage the Node.js & pnpm toolchain: https://mise.jdx.dev/`,
+  );
   console.log(`[*] Run the following commands to get started:`);
   console.log(`[*] - cd ${destinationPath}`);
+  console.log(`[*] - mise trust && mise install`);
   console.log(`[*] - pnpm install`);
   console.log(`[*] - pnpm build`);
   console.log(
@@ -40,11 +44,7 @@ const getTemplatePath = (config: ScaffoldConfig) => {
 };
 
 const getDestinationPath = (config: ScaffoldConfig) => {
-  const sanitizedPackageName = config.packageName.replace(
-    /[^a-zA-Z0-9_-]/g,
-    "-",
-  );
-  return path.join(process.cwd(), sanitizedPackageName);
+  return path.join(process.cwd(), config.pluginId);
 };
 
 export const toPluginId = (packageName: string) => {
@@ -67,7 +67,7 @@ export const updateTemplateValues = async (
   destinationPath: string,
   config: ScaffoldConfig,
 ) => {
-  const pluginId = toPluginId(config.packageName);
+  const { pluginId } = config;
   const templateId = getTemplateId(config);
   const templateName = getTemplateName(config);
 
@@ -91,6 +91,49 @@ export const updateTemplateValues = async (
     packageJsonPath,
     JSON.stringify(packageJson, null, 2) + "\n",
   );
+
+  const specPath = getSpecPath(destinationPath, config);
+  let specContent = await fsPromises.readFile(specPath, "utf-8");
+  specContent = specContent.replaceAll(
+    `manifestId: "${templateId}"`,
+    `manifestId: "${pluginId}"`,
+  );
+  await fsPromises.writeFile(specPath, specContent);
+
+  if (config.frontend) {
+    await replaceInFile(
+      path.join(destinationPath, "packages", "frontend", "src", "index.ts"),
+      `plugin--${templateId}`,
+      `plugin--${pluginId}`,
+    );
+
+    const sharedPackageJsonPaths = [
+      "package.json",
+      "packages/shared/package.json",
+      "packages/backend/package.json",
+      "packages/frontend/package.json",
+    ];
+    for (const sharedPackageJsonPath of sharedPackageJsonPaths) {
+      await replaceInFile(
+        path.join(destinationPath, sharedPackageJsonPath),
+        `@caido-community/${templateId}`,
+        `@caido-community/${pluginId}`,
+      );
+    }
+  }
+};
+
+const replaceInFile = async (filePath: string, from: string, to: string) => {
+  const content = await fsPromises.readFile(filePath, "utf-8");
+  await fsPromises.writeFile(filePath, content.replaceAll(from, to));
+};
+
+// The plugin Spec (and its `manifestId`) lives in the `shared` package when the
+// plugin has a frontend, and in the backend package otherwise.
+const getSpecPath = (destinationPath: string, config: ScaffoldConfig) => {
+  return config.frontend
+    ? path.join(destinationPath, "packages", "shared", "src", "index.ts")
+    : path.join(destinationPath, "packages", "backend", "src", "spec.ts");
 };
 
 const getSharedSkillsPath = () => {

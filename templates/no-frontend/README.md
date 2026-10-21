@@ -10,9 +10,10 @@ This template should be used as a starting point for creating a new plugin with 
 
 ## Getting Started
 
-The Node.js and pnpm versions are pinned in [`mise.toml`](./mise.toml). Install them once with mise, then build:
+The Node.js and pnpm versions are pinned in [`mise.toml`](./mise.toml). We recommend [mise](https://mise.jdx.dev/) to manage them. Trust this directory's config once, install the toolchain, then build:
 
 ```bash
+mise trust     # required once: mise won't load an untrusted mise.toml
 mise install   # installs the pinned Node.js and pnpm
 pnpm install
 pnpm build

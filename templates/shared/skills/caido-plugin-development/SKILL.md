@@ -1,6 +1,6 @@
 ---
 name: caido-plugin-development
-description: Guidance for building Caido plugins — what Caido is, the backend/frontend/shared monorepo structure, the typed plugin contract (Spec via @caido/sdk-shared, the shared API and Events types, Result/ok/err), Backend SDK patterns (registering API endpoints, init, events), Frontend SDK patterns (mounting a page with navigation.addPage, sidebar items, commands, menus, sending HTTP requests), findings, code-quality and naming conventions, the linter, and SDK API validation. Use whenever writing or editing code in a Caido plugin (anything under packages/backend, packages/frontend, or packages/shared, or caido.config.ts).
+description: Guidance for building Caido plugins — what Caido is, the backend/frontend/shared monorepo structure, the typed plugin contract (Spec via @caido/sdk-shared, the shared API and Events types, Result/ok/err), Backend SDK patterns (registering API endpoints, init, events), external callers of the backend API via @caido/sdk-client, Frontend SDK patterns (mounting a page with navigation.addPage, sidebar items, commands, menus, sending HTTP requests), findings, code-quality and naming conventions, the linter, and SDK API validation. Use whenever writing or editing code in a Caido plugin (anything under packages/backend, packages/frontend, or packages/shared, or caido.config.ts).
 ---
 
 # Caido Plugin Development
@@ -26,7 +26,7 @@ We are running in a plugin environment where we interact with Caido through the 
 
 Modern Caido plugins are pnpm monorepos with up to three packages:
 
-- `packages/shared` → Shared, framework-agnostic code: the typed plugin contract (API + Events), the `Result` type, and data schemas/types. Imported by BOTH backend and frontend as `shared`.
+- `packages/shared` → Shared, framework-agnostic code: the typed plugin contract (API + Events), the `Result` type, and data schemas/types. Imported by BOTH backend and frontend as `shared` (a workspace alias for the real package name, `@caido-community/<plugin-id>`).
 - `packages/backend` → Backend plugin code: server-side logic, data processing, and the API endpoint implementations.
 - `packages/frontend` → Frontend plugin code: UI components, user interactions, and calls to the backend.
 
@@ -112,7 +112,28 @@ export type Spec = DefinePluginPackageSpec<{
 }>;
 ```
 
-> Older plugins (and the current `create-plugin` templates) instead use `DefineAPI<{ fn: typeof fn }>` and `DefineEvents<{...}>` imported directly from `caido:plugin`, with `SDK<API, BackendEvents>` / `Caido<API, BackendEvents>`. Prefer the `shared` + `Spec` approach above for new code.
+> Older plugins instead use `DefineAPI<{ fn: typeof fn }>` and `DefineEvents<{...}>` imported directly from `caido:plugin`, with `SDK<API, BackendEvents>` / `Caido<API, BackendEvents>`. Prefer the `shared` + `Spec` approach above for new code.
+
+### The backend API is public (`@caido/sdk-client`)
+
+Your frontend is not the only caller. Any script, CLI, or other tool can call the backend API and subscribe to its events through a Caido instance using `@caido/sdk-client` (from `caido/sdk-js`). For that reason the `shared` package is named `@caido-community/<plugin-id>`, so it can be published to npm and external callers get types from the `Spec`:
+
+```typescript
+import { Client } from "@caido/sdk-client";
+import type { Spec } from "@caido-community/quickssrf";
+
+const client = new Client({ url: "http://localhost:8080", auth: { pat } });
+await client.connect();
+
+const plugin = await client.plugin.pluginPackage<Spec>("quickssrf");
+const providers = await plugin?.getProviders(); // typed from Spec["api"]
+
+for await (const [event] of plugin!.subscribeEvent("interaction:received")) {
+  // typed from Spec["events"]
+}
+```
+
+Keep this in mind when changing `api` or `events`: callers outside your frontend may depend on them, and values cross the wire as JSON.
 
 ## Backend SDK
 

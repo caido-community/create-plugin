@@ -1,14 +1,14 @@
 {
   "name": "backend",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "types": "src/index.ts",
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "vite build"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@caido/sdk-backend": "^0.46.0",
-    "vite": "6.0.11"
+    "@caido/sdk-backend": "0.57.0",
+    "@caido/sdk-shared": "0.2.2"
   }
 }
